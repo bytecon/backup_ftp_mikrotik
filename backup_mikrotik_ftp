@@ -1,0 +1,22 @@
+# create by bytecon - www.bytecon.it #
+
+:local username "your username"
+:local password "your password"
+:local hostname "your hostname"
+
+################################################
+
+:local dayNumber [:pick  [/system clock get date] 4 6 ];
+:local backupFilename ([/system identity get name]."-backup.rsc");
+:local Filename ([/system identity get name]."-backup.backup");
+
+################################################
+
+/export compact file=$backupFilename;
+/system backup save name="$Filename";
+delay 5;
+/tool fetch address=$username src-path=$backupFilename user=$hostname mode=ftp password="$password" dst-path="/your path/$backupFilename" upload=yes;
+/tool fetch address=$username src-path=$Filename user=$hostname mode=ftp password="$password" dst-path="/your path/$Filename" upload=yes;
+delay 10;
+/file remove "$backupFilename";
+/file remove "$Filename";
